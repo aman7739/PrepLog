@@ -8,10 +8,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   // --- NEW SECURITY STATES ---
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [authError, setAuthError] = useState('');
-  const ADMIN_SECRET = '2026'; // 🔒 Change this to your desired password!
+  const isAuthorized = profile?.role === 'admin';
 
   // --- DASHBOARD STATES ---
   const [activeTab, setActiveTab] = useState('overview'); 
@@ -19,17 +16,12 @@ function AdminDashboard() {
   const [roadmaps, setRoadmaps] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Handle Admin Password Submission
-  const handleAdminLogin = (e) => {
-    e.preventDefault();
-    if (adminPassword === ADMIN_SECRET) {
-      setIsAuthorized(true);
-      setAuthError('');
-      fetchAdminData(); // Only fetch data AFTER successful login
-    } else {
-      setAuthError('Incorrect Admin Password. Access Denied.');
+  // 🚀 AUTO-FETCH ADMIN DATA IF AUTHORIZED
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchAdminData();
     }
-  };
+  }, [isAuthorized]);
 
   const fetchAdminData = async () => {
     setLoading(true);
@@ -70,51 +62,25 @@ function AdminDashboard() {
     return <div className="min-h-screen bg-[#0a0e1a] text-white flex items-center justify-center">Verifying session...</div>;
   }
 
-  // 🔒 SECURITY LAYER: If not authorized, show the Password Screen
+  // 🔒 SECURITY LAYER: If not authorized, show Access Denied
   if (!isAuthorized) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-4">
-        <div className="bg-[#0f1729] border border-[#1e2d45] rounded-2xl p-8 max-w-md w-full shadow-2xl">
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-black text-yellow-400 tracking-tight mb-2">⚡ Admin Access Required</h2>
-            <p className="text-gray-400 text-sm">Please enter the master password to continue.</p>
-          </div>
-
-          <form onSubmit={handleAdminLogin} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                placeholder="Enter Admin Password"
-                className="w-full bg-[#0a0e1a] border border-[#1e2d45] rounded-lg px-4 py-3 text-white focus:border-yellow-400 focus:outline-none transition-all"
-                autoFocus
-              />
-            </div>
-            {authError && <p className="text-red-400 text-sm text-center">{authError}</p>}
-            
-            <div className="flex gap-3 mt-6">
-              <button
-                type="button"
-                onClick={() => navigate('/dashboard')}
-                className="flex-1 px-4 py-3 bg-[#1e2d45] text-white rounded-lg font-bold hover:bg-[#2a3f5f] transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 px-4 py-3 bg-yellow-500 text-black rounded-lg font-bold hover:bg-yellow-400 transition-all"
-              >
-                Unlock
-              </button>
-            </div>
-          </form>
+      <div className="flex items-center justify-center min-h-screen bg-[#0a0e1a] text-white px-4">
+        <div className="text-center p-8 bg-[#1e2d45] rounded-xl border border-red-500/30 shadow-2xl max-w-md w-full">
+          <h1 className="text-2xl font-bold text-red-500 mb-2">Access Denied 🛑</h1>
+          <p className="text-gray-400 mb-6">You do not have administrator privileges.</p>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-2 bg-[#0a0e1a] border border-[#1e2d45] text-white rounded-lg hover:bg-gray-800 transition-all font-bold"
+          >
+            Return to Dashboard
+          </button>
         </div>
       </div>
     );
   }
 
-  // 🔓 IF AUTHORIZED, SHOW THE DASHBOARD (Your existing code)
+  // 🔓 IF AUTHORIZED, SHOW THE DASHBOARD
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white">
       {/* Admin Navbar */}

@@ -96,7 +96,7 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
 
   return (
     <div className={`bg-[#0d1526] border ${connected ? platform.border : 'border-[#1e2d45]'} rounded-2xl p-5 transition-all`}>
-
+      
       {/* Header Row */}
       <div className="flex items-center gap-3 mb-3">
         <span className="text-2xl flex-shrink-0">{platform.icon}</span>
@@ -156,7 +156,7 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
         </div>
       )}
 
-      {/* Input */}
+      {/* Input Form */}
       {editing && !confirming && (
         <div className="flex gap-2 mb-3">
           <input
@@ -185,7 +185,7 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
         </div>
       )}
 
-      {/* Stats */}
+      {/* Stats Block */}
       {connected && stats && !editing && !confirming && (
         <div className={`${platform.bg} rounded-xl p-3 mb-3`}>
           <PlatformStats platformId={platform.id} stats={stats} color={platform.color} />
@@ -210,7 +210,7 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
         </div>
       )}
 
-      {/* Not connected */}
+      {/* Not connected state */}
       {!connected && !editing && (
         <div className="text-gray-600 text-xs">Not connected</div>
       )}
@@ -285,19 +285,53 @@ function PlatformStats({ platformId, stats, color }) {
     )
   }
 
-  // 🚀 NEW: GeeksForGeeks UI block!
+  // 🚀 UPDATED: GFG UI Block
   if (platformId === 'gfg') {
     return (
-      <div className="grid grid-cols-1 gap-2 text-center">
+      <div className="grid grid-cols-3 gap-2 text-center">
         <div>
-          <div className={`text-lg font-black ${color}`}>{stats.score || 0}</div>
-          <div className="text-gray-600 text-[10px]">Coding Score</div>
+          <div className={`text-lg font-black ${color}`}>{stats.codingScore || 0}</div>
+          <div className="text-gray-600 text-[10px]">Score</div>
+        </div>
+        <div>
+          <div className="text-lg font-black text-green-300">{stats.totalSolved || 0}</div>
+          <div className="text-gray-600 text-[10px]">Solved</div>
+        </div>
+        <div>
+          <div className="text-lg font-black text-white capitalize">{stats.rank || '—'}</div>
+          <div className="text-gray-600 text-[10px]">Rank</div>
         </div>
       </div>
     )
   }
 
-  // Generic — HackerRank
+  if (platformId === 'hackerrank') {
+    const badgeCount = stats.badges?.length || 0;
+    const topBadge = badgeCount > 0 ? stats.badges[0].name : 'No Badges';
+    
+    return (
+      <div className="grid grid-cols-2 gap-2 text-center">
+        <div>
+          <div className={`text-lg font-black ${color}`}>
+            {stats.total_score || 0}
+          </div>
+          <div className="text-gray-600 text-[10px]">
+            Score
+          </div>
+        </div>
+        <div>
+          <div className={`text-lg font-black ${badgeCount > 0 ? 'text-yellow-400' : 'text-gray-500'}`}>
+            {badgeCount} 🏆
+          </div>
+          <div className="text-gray-600 text-[10px] truncate" title={topBadge}>
+            {badgeCount > 0 ? `${stats.badges[0].stars}★ ${topBadge}` : 'None'}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Fallback
   return (
     <div className="text-center py-1">
       <div className={`text-sm font-bold ${color}`}>Connected ✓</div>
@@ -312,12 +346,11 @@ function Platforms() {
 
   return (
     <div className="min-h-screen bg-[#0a0e1a]">
-
       {/* Navbar */}
       <div className="sticky top-0 z-10 bg-[#0a0e1a]/95 backdrop-blur border-b border-[#1e2d45] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
-          <button
-            onClick={() => navigate('/dashboard')}
+          <button 
+            onClick={() => navigate('/dashboard')} 
             className="text-gray-500 hover:text-white transition-colors text-sm"
           >
             ← Dashboard
@@ -330,13 +363,11 @@ function Platforms() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
-
+        
         {/* Header */}
         <div className="mb-8">
           <h2 className="text-white text-2xl font-black mb-2">Connect Platforms</h2>
-          <p className="text-gray-400 text-sm">
-            Link your coding profiles to track stats automatically.
-          </p>
+          <p className="text-gray-400 text-sm">Link your coding profiles to track stats automatically.</p>
         </div>
 
         {/* Connected count */}
@@ -390,4 +421,3 @@ function Platforms() {
 }
 
 export default Platforms
-

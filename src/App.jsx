@@ -7,6 +7,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import UpdatePassword from './pages/UpdatePassword' 
 import Dashboard from './pages/Dashboard'
 import SelectRoadmap from './pages/SelectRoadmap'
 import Platforms from './pages/Platforms'
@@ -65,7 +66,9 @@ const DashboardRoute = () => {
 
   if (loading || checking) return <div className="min-h-screen bg-[#0a0e1a]" />
   if (!user) return <Navigate to="/login" />
-  if (hasRoadmap === false) return <Navigate to="/select-roadmap" />
+  
+  // if (hasRoadmap === false) return <Navigate to="/select-roadmap" />
+
   return <Dashboard />
 }
 
@@ -75,6 +78,10 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
       <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      
+      {/* Magic Link Reset Route */}
+      <Route path="/update-password" element={<PublicRoute><UpdatePassword /></PublicRoute>} />
+      
       <Route path="/dashboard" element={<DashboardRoute />} />
       <Route path="/select-roadmap" element={<ProtectedRoute><SelectRoadmap /></ProtectedRoute>} />
       <Route path="/platforms" element={<ProtectedRoute><Platforms /></ProtectedRoute>} />

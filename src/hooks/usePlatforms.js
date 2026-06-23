@@ -23,7 +23,6 @@ export const usePlatforms = () => {
 
       setPlatforms(pData || [])
 
-      // Fetch cached stats
       const { data: sData } = await supabase
         .from('platform_stats')
         .select('*')
@@ -47,7 +46,6 @@ export const usePlatforms = () => {
   const savePlatform = async (platformId, username) => {
     if (!user) return
     try {
-      // Upsert platform
       const { error } = await supabase
         .from('platforms')
         .upsert({
@@ -61,44 +59,9 @@ export const usePlatforms = () => {
 
       if (error) console.error('savePlatform error:', error.message)
       await fetchPlatforms()
-
-      // Auto-sync after save
       await syncPlatform(platformId, username)
     } catch (err) {
       console.error('savePlatform error:', err)
-    }
-  }
-
-  const callEdgeFunction = async (platformId, username) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession()
-      
-      const response = await fetch(
-        'https://zvfvmppiyoahjtqqrjrq.supabase.co/functions/v1/fetch-platform-stats',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session?.access_token}`,
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            platform: platformId,
-            username,
-          }),
-        }
-      )
-
-      if (!response.ok) {
-        console.error('Edge Function response error:', response.status)
-        return null
-      }
-
-      const data = await response.json()
-      return data?.stats || null
-    } catch (err) {
-      console.error('Edge Function call error:', err)
-      return null
     }
   }
 
@@ -124,37 +87,40 @@ export const usePlatforms = () => {
         } else {
           console.error("CodeChef Scraper Error:", data?.error)
         }
-      }
-      
-      // 🚀 ACTUALLY FINAL: GeeksForGeeks via Edge Function with long timeout
+      } 
+      // 🚀 GEEKSFORGEEKS EDGE FUNCTION SYNC
       else if (platformId === 'gfg') {
         try {
-          console.log("🟢 GFG: Starting sync for @" + username);
-          console.log("⏳ GFG: This may take 30-90 seconds while the server boots up...");
-          
-          // Call the edge function (no JWT verification needed)
+          const cleanUsername = username.replace('@', '').trim();
           const { data, error } = await supabase.functions.invoke('sync-gfg', {
-            body: { username }
-          })
+            body: { username: cleanUsername }
+          });
 
-          if (error) {
-            console.error("❌ GFG Edge Function error:", error);
-            stats = { score: 0 };
-          } else if (data?.success) {
-            console.log("✅ GFG: Success! Score = " + data.score);
-            stats = { score: data.score || 0 };
-          } else {
-            console.warn("⚠️ GFG: Edge Function returned error:", data?.error);
-            stats = { score: 0 };
-          }
+          if (error) throw error;
+          if (data?.error) throw new Error(data.error);
+
+          stats = data; // Captures codingScore, totalSolved, rank, etc.
         } catch (err) {
           console.error("❌ GFG Sync Error:", err.message);
-          stats = { score: 0 };
+          stats = { codingScore: 0, totalSolved: 0, error: "Sync failed" };
         }
-      }
-
+      } 
+      // 🚀 HACKERRANK EDGE FUNCTION SYNC
       else if (platformId === 'hackerrank') {
-        stats = await callEdgeFunction(platformId, username)
+        try {
+          const cleanUsername = username.replace('@', '').trim();
+          const { data, error } = await supabase.functions.invoke('sync-hackerrank', {
+            body: { username: cleanUsername }
+          });
+
+          if (error) throw error;
+          if (data?.error) throw new Error(data.error);
+
+          stats = data; 
+        } catch (err) {
+          console.error("❌ HackerRank Sync Error:", err.message);
+          stats = { total_score: 0, badges: [], error: "Sync failed" };
+        }
       } else {
         stats = { connected: true, note: 'Auto-sync coming soon' }
       }
@@ -200,8 +166,7 @@ export const usePlatforms = () => {
         .eq('user_id', user.id)
         .eq('platform', platformId)
 
-      await fetchPl
-      atforms()
+      await fetchPlatforms()
     } catch (err) {
       console.error('deletePlatform error:', err)
     }

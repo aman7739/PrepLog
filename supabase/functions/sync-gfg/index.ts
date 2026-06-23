@@ -6,62 +6,56 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
     const { username } = await req.json()
-    if (!username) throw new Error("Username is required")
+    if (!username) throw new Error('Username is required')
 
-    console.log(`[GFG] Fetching for username: ${username}`)
-
-    // Fetch from the Render API with a LONG timeout
-    // Deno's fetch doesn't have built-in timeout, so we use Promise.race
-    const fetchPromise = fetch(`https://gfg-api-fefa.onrender.com/${username}`)
+    const profileUrl = `https://www.geeksforgeeks.org/user/${username}/`
     
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Timeout after 120 seconds")), 120000)
-    )
-
-    const res = await Promise.race([fetchPromise, timeoutPromise])
-
-    if (!res.ok) {
-      console.log(`[GFG] API returned status: ${res.status}`)
-      throw new Error(`GFG API returned ${res.status}`)
-    }
-
-    const data = await res.json()
-    console.log(`[GFG] Raw response:`, data)
-
-    // Extract score from multiple possible formats
-    let score = 0
-    if (data?.overall_score) {
-      score = parseInt(data.overall_score, 10)
-    } else if (data?.codingScore) {
-      score = parseInt(data.codingScore, 10)
-    } else if (data?.score) {
-      score = parseInt(data.score, 10)
-    }
-
-    console.log(`[GFG] Extracted score: ${score}`)
-
-    return new Response(
-      JSON.stringify({ score, success: true }),
-      { 
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200 
+    // Spoofing a real browser to prevent Cloudflare from dropping the connection
+    const response = await fetch(profileUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Connection': 'keep-alive'
       }
+    })
+
+    if (!response.ok) {
+      throw new Error(`GFG blocked the request or profile not found (HTTP ${response.status})`)
+    }
+
+    const html = await response.text()
+    
+    let codingScore = 0;
+    let totalSolved = 0;
+    let rank = "N/A";
+
+    // ⚡ Sniper Regex targeting the exact escaped JSON structure we discovered earlier
+    const scoreMatch = html.match(/\\?"score\\?"\s*:\s*(\d+)/i) || html.match(/score_card_value[^>]*>[\s\S]*?(\d+)/i);
+    if (scoreMatch) codingScore = parseInt(scoreMatch[1], 10);
+
+    const solvedMatch = html.match(/\\?"total_problems_solved\\?"\s*:\s*(\d+)/i);
+    if (solvedMatch) totalSolved = parseInt(solvedMatch[1], 10);
+
+    const rankMatch = html.match(/\\?"institute_rank\\?"\s*:\s*\\?"([^"\\]*)\\?"/i);
+    if (rankMatch && rankMatch[1].trim() !== "") rank = rankMatch[1];
+
+    // Always return a valid response to prevent 502s
+    return new Response(
+      JSON.stringify({ codingScore, totalSolved, rank, success: true }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     )
 
   } catch (error) {
-    console.error(`[GFG] Error:`, error.message)
+    // Failsafe catch to ensure Kong NEVER throws a 502
     return new Response(
-      JSON.stringify({ error: error.message, success: false, score: 0 }),
-      { 
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200  // Return 200 so Supabase doesn't throw
-      }
+      JSON.stringify({ error: error.message || "Unknown scrape error", success: false }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 } 
     )
   }
 })
+

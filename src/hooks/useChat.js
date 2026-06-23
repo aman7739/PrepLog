@@ -5,12 +5,14 @@ import { useAuth } from '../context/AuthContext';
 export const useChat = (conversationId) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  // NEW: State to track if an upload is currently happening
+  const [isUploading, setIsUploading] = useState(false); 
   const { user } = useAuth();
 
   useEffect(() => {
     if (!conversationId || !user) return;
 
-    // --- NEW: Mark unread messages as read ---
+    // --- Mark unread messages as read ---
     const markAsRead = async () => {
       await supabase
         .from('messages')
@@ -55,7 +57,7 @@ export const useChat = (conversationId) => {
            markAsRead();
         }
       })
-      // NEW: Listen for UPDATES (like when a message is marked as read)
+      // Listen for UPDATES (like when a message is marked as read)
       .on('postgres_changes', {
         event: 'UPDATE',
         schema: 'public',
@@ -73,18 +75,68 @@ export const useChat = (conversationId) => {
     };
   }, [conversationId, user]); 
 
-  // Function to push a new message to Supabase 
+  // Function to push a standard text message to Supabase 
   const sendMessage = async (content) => {
     if (!content.trim()) return;
 
     const { error } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       sender_id: user.id,
-      content: content.trim()
+      content: content.trim(),
+      message_type: 'text' // Explicitly marking as text
     });
 
     if (error) console.error("Error sending message:", error.message);
   };
 
-  return { messages, sendMessage, loading };
+  // --- NEW: Function to upload media and send it ---
+  const sendMedia = async (file) => {
+    if (!file) return;
+    
+    try {
+      setIsUploading(true);
+
+      // 1. Create a unique file name to prevent overwriting
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}_${Date.now()}.${fileExt}`;
+      const filePath = `${conversationId}/${fileName}`; // Group files by conversation ID
+
+      // 2. Upload to the secure Supabase bucket
+      const { error: uploadError } = await supabase.storage
+        .from('chat-media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // 3. Get the public URL for the UI to display
+      const { data: { publicUrl } } = supabase.storage
+        .from('chat-media')
+        .getPublicUrl(filePath);
+
+      // 4. Determine if it's an image or document
+      const isImage = file.type.startsWith('image/');
+      const messageType = isImage ? 'image' : 'document';
+
+      // 5. Insert the message into the database
+      const { error: dbError } = await supabase.from('messages').insert({
+        conversation_id: conversationId,
+        sender_id: user.id,
+        content: isImage ? '📷 Image' : `📄 ${file.name}`, // Fallback text for the sidebar
+        message_type: messageType,
+        media_url: publicUrl
+      });
+
+      if (dbError) throw dbError;
+
+    } catch (error) {
+      console.error("Error uploading media:", error.message);
+      alert("Failed to upload file. Please try again.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Export the new sendMedia function and isUploading state
+  return { messages, sendMessage, sendMedia, isUploading, loading };
 };
+

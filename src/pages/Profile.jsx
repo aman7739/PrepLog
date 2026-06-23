@@ -173,8 +173,9 @@ function Profile() {
             </div>
             {/* Profile Info */}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2">{profile.full_name || 'Anonymous User'}</h1>
-              <p className="text-gray-400 mb-4">{profile.email}</p>
+              <h1 className="text-3xl font-bold mb-4">{profile.full_name || 'Anonymous User'}</h1>
+              
+            
               
               {/* Action Buttons Container */}
               <div className="flex items-center gap-3">

@@ -9,6 +9,12 @@ function Login() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Magic Link States
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false)
+  const [resetEmail, setResetEmail] = useState('')
+  const [resetStatus, setResetStatus] = useState(null)
+  const [resetMessage, setResetMessage] = useState('')
+
   const handleLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -36,9 +42,27 @@ function Login() {
     })
   }
 
+  // Magic Link Reset Function
+  const handlePasswordReset = async (e) => {
+    e.preventDefault()
+    setResetMessage('Sending link...')
+    
+    const { error } = await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/update-password`, 
+    })
+
+    if (error) {
+      setResetStatus('error')
+      setResetMessage(error.message)
+    } else {
+      setResetStatus('success')
+      setResetMessage('Magic link sent! Check your inbox.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-4">
-      <div className="bg-[#111827] border border-[#1e2d45] rounded-2xl p-8 w-full max-w-md">
+      <div className="bg-[#111827] border border-[#1e2d45] rounded-2xl p-8 w-full max-w-md relative">
         
         {/* Logo */}
         <div className="text-center mb-8">
@@ -53,7 +77,7 @@ function Login() {
           onClick={handleGoogle}
           className="w-full border border-[#1e2d45] text-white py-3 rounded-xl font-semibold hover:border-[#00d4ff] transition-all flex items-center justify-center gap-3 mb-6"
         >
-          <img src="https://www.google.com/favicon.ico" className="w-5 h-5" />
+          <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="Google" />
           Continue with Google
         </button>
 
@@ -94,6 +118,16 @@ function Login() {
               required
               className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
             />
+            {/* Moved below the input and right-aligned */}
+            <div className="flex justify-end mt-2">
+              <button 
+                type="button"
+                onClick={() => setIsResetModalOpen(true)}
+                className="text-sm text-gray-400 hover:text-[#00d4ff] transition-colors"
+              >
+                Forgot Password?
+              </button>
+            </div>
           </div>
 
           <button
@@ -111,7 +145,57 @@ function Login() {
             Sign up free
           </Link>
         </p>
+
       </div>
+
+      {/* Magic Link Reset Modal */}
+      {isResetModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="bg-[#111827] border border-[#1e2d45] p-8 rounded-2xl shadow-2xl w-full max-w-md">
+            <h3 className="text-2xl font-bold text-white mb-2">Reset Password</h3>
+            <p className="text-sm text-gray-400 mb-6">
+              Enter your email and we'll send you a secure magic link to reset your password.
+            </p>
+            
+            <form onSubmit={handlePasswordReset}>
+              <input
+                type="email"
+                required
+                value={resetEmail}
+                onChange={(e) => setResetEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all mb-4"
+              />
+              
+              {resetMessage && (
+                <p className={`text-sm mb-4 ${resetStatus === 'error' ? 'text-red-400' : 'text-[#00d4ff]'}`}>
+                  {resetMessage}
+                </p>
+              )}
+
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsResetModalOpen(false)
+                    setResetMessage('')
+                    setResetEmail('')
+                  }}
+                  className="flex-1 py-3 rounded-xl border border-[#1e2d45] text-gray-400 hover:bg-[#1a2235] transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 rounded-xl bg-[#00d4ff] text-black font-bold hover:opacity-90 transition-all"
+                >
+                  Send Link
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
