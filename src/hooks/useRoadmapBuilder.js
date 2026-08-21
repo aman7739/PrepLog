@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
@@ -85,7 +86,7 @@ function useRoadmapBuilder() {
 
     } catch (error) {
       console.error('❌ Error saving roadmap:', error)
-      alert('Failed to save roadmap. Please try again.')
+      toast.error('Failed to save roadmap. Please try again.')
       return false
     } finally {
       setLoading(false)

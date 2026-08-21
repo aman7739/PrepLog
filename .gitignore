@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 .env
 .env.*
+
+# Supabase temp
+supabase/.temp/*
+
+# Setup files
+schema.sql
+supabase/.branches/*

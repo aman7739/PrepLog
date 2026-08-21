@@ -105,14 +105,14 @@ function SelectRoadmap() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] p-6">
+    <div className="min-h-screen bg-brand-black p-6">
 
       {/* Header */}
       <div className="text-center mb-10">
-        <h1 className="text-4xl font-black text-white mb-2">
-          Choose Your <span className="text-[#00d4ff]">Roadmaps</span>
+        <h1 className="text-4xl font-black text-theme-text mb-2">
+          Choose Your <span className="text-brand-primary">Roadmaps</span>
         </h1>
-        <p className="text-gray-400">Select one or more roadmaps to start tracking your progress</p>
+        <p className="text-theme-textSec">Select one or more roadmaps to start tracking your progress</p>
       </div>
 
       {/* Search */}
@@ -122,7 +122,7 @@ function SelectRoadmap() {
           placeholder="🔍 Search roadmaps..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full bg-[#111827] border border-[#1e2d45] text-white px-4 py-3 rounded-xl focus:outline-none focus:border-[#00d4ff] transition-all"
+          className="w-full bg-[#111827] border border-theme-border text-theme-text px-4 py-3 rounded-xl focus:outline-none focus:border-brand-primary transition-all"
         />
       </div>
 
@@ -134,8 +134,8 @@ function SelectRoadmap() {
             onClick={() => setActiveCategory(cat.id)}
             className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
               activeCategory === cat.id
-                ? 'bg-[#00d4ff] text-black'
-                : 'bg-[#111827] border border-[#1e2d45] text-gray-400 hover:border-[#00d4ff] hover:text-[#00d4ff]'
+                ? 'bg-brand-primary text-white'
+                : 'bg-[#111827] border border-theme-border text-theme-textSec hover:border-brand-primary hover:text-brand-primary'
             }`}
           >
             {cat.icon} {cat.label}
@@ -145,7 +145,7 @@ function SelectRoadmap() {
 
       {/* Cards Grid */}
       {loading ? (
-        <div className="text-center text-gray-400 py-20">Loading roadmaps...</div>
+        <div className="text-center text-theme-textSec py-20">Loading roadmaps...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto mb-24">
           {filtered.map(t => {
@@ -156,23 +156,23 @@ function SelectRoadmap() {
                 onClick={() => toggleSelect(t.id)}
                 className={`cursor-pointer rounded-xl p-5 border transition-all ${
                   isSelected
-                    ? 'bg-[#00d4ff]/10 border-[#00d4ff]'
-                    : 'bg-[#111827] border-[#1e2d45] hover:border-[#00d4ff]/50'
+                    ? 'bg-brand-primary/10 border-brand-primary'
+                    : 'bg-[#111827] border-theme-border hover:border-brand-primary/50'
                 }`}
               >
                 <div className="flex items-start justify-between mb-3">
                   <span className="text-3xl">{t.icon}</span>
                   {isSelected && (
-                    <span className="text-[#00d4ff] text-xl">✓</span>
+                    <span className="text-brand-primary text-xl">✓</span>
                   )}
                 </div>
-                <h3 className="text-white font-bold text-lg mb-1">{t.title}</h3>
-                <p className="text-gray-400 text-sm mb-3 line-clamp-2">{t.description}</p>
+                <h3 className="text-theme-text font-bold text-lg mb-1">{t.title}</h3>
+                <p className="text-theme-textSec text-sm mb-3 line-clamp-2">{t.description}</p>
                 <div className="flex items-center justify-between">
                   <span className={`text-xs px-2 py-1 rounded-full font-semibold ${DIFFICULTY_COLOR[t.difficulty]}`}>
                     {t.difficulty}
                   </span>
-                  <span className="text-gray-500 text-xs">{t.duration_weeks} weeks</span>
+                  <span className="text-theme-textSec text-xs">{t.duration_weeks} weeks</span>
                 </div>
               </div>
             )
@@ -182,14 +182,14 @@ function SelectRoadmap() {
 
       {/* Bottom Save Bar */}
       {selected.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-[#111827] border-t border-[#1e2d45] px-6 py-4 flex items-center justify-between">
-          <span className="text-white font-semibold">
+        <div className="fixed bottom-0 left-0 right-0 bg-[#111827] border-t border-theme-border px-6 py-4 flex items-center justify-between">
+          <span className="text-theme-text font-semibold">
             {selected.length} roadmap{selected.length > 1 ? 's' : ''} selected
           </span>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="bg-[#00d4ff] hover:bg-[#00b4d8] disabled:opacity-50 text-black font-bold px-8 py-3 rounded-xl transition-all"
+            className="bg-brand-primary hover:opacity-90 disabled:opacity-50 text-black font-bold px-8 py-3 rounded-xl transition-all"
           >
             {saving ? 'Saving...' : 'Start Learning →'}
           </button>

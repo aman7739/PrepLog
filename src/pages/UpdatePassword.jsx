@@ -41,14 +41,14 @@ export default function UpdatePassword() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-4">
-      <div className="bg-[#111827] border border-[#1e2d45] rounded-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
+      <div className="bg-[#111827] border border-theme-border rounded-2xl p-8 w-full max-w-md">
         
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-black text-white">
-            Reset <span className="text-[#00d4ff]">Password</span>
+          <h2 className="text-3xl font-black text-theme-text">
+            Reset <span className="text-brand-primary">Password</span>
           </h2>
-          <p className="text-gray-400 mt-2">Enter your new password below.</p>
+          <p className="text-theme-textSec mt-2">Enter your new password below.</p>
         </div>
 
         <form onSubmit={handleUpdatePassword} className="flex flex-col gap-4">
@@ -64,7 +64,7 @@ export default function UpdatePassword() {
           )}
 
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">New Password</label>
+            <label className="text-theme-textSec text-sm mb-2 block">New Password</label>
             <input
               type="password"
               value={password}
@@ -72,14 +72,14 @@ export default function UpdatePassword() {
               placeholder="••••••••"
               required
               minLength={6}
-              className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
+              className="w-full bg-[#1a2235] border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-brand-primary transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#00d4ff] text-black font-bold py-3 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 mt-4"
+            className="bg-brand-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 mt-4"
           >
             {loading ? 'Updating...' : 'Update Password'}
           </button>

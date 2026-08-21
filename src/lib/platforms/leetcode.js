@@ -3,9 +3,22 @@ export const fetchLeetcodeStats = async (username) => {
     const response = await fetch(
       `https://alfa-leetcode-api.onrender.com/${username}/solved`
     )
-    if (!response.ok) return null
+    
+    if (response.status === 429) {
+      return { error: 'API Rate Limited (429). Try again later.' }
+    }
+    if (!response.ok) {
+      return { error: 'Failed to fetch LeetCode stats.' }
+    }
+    
     const data = await response.json()
-    if (!data) return null
+    if (!data) return { error: 'No data returned' }
+    
+    // If API returns an error message in JSON
+    if (data.errors) {
+      return { error: 'LeetCode user not found or private.' }
+    }
+
     return {
       totalSolved: data.solvedProblem || 0,
       easySolved: data.easySolved || 0,
@@ -14,6 +27,6 @@ export const fetchLeetcodeStats = async (username) => {
     }
   } catch (err) {
     console.error('LeetCode fetch error:', err)
-    return null
+    return { error: 'Network error connecting to proxy.' }
   }
 }

@@ -4,9 +4,9 @@ function StatsBar({ dayOnRoadmap, streak, topicsDone, tasksDone }) {
       label: 'Day on Roadmap',
       value: dayOnRoadmap,
       icon: '📅',
-      color: 'text-[#00d4ff]',
-      bg: 'bg-[#00d4ff]/5',
-      border: 'border-[#00d4ff]/20',
+      color: 'text-brand-primary',
+      bg: 'bg-brand-primary/5',
+      border: 'border-brand-primary/20',
     },
     {
       label: 'Current Streak',
@@ -43,7 +43,7 @@ function StatsBar({ dayOnRoadmap, streak, topicsDone, tasksDone }) {
         >
           <div className="text-2xl mb-2">{s.icon}</div>
           <div className={`text-3xl font-black ${s.color} mb-1`}>{s.value}</div>
-          <div className="text-gray-500 text-xs">{s.label}</div>
+          <div className="text-theme-textSec text-xs">{s.label}</div>
         </div>
       ))}
     </div>

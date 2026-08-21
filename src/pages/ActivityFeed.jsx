@@ -6,38 +6,38 @@ function ActivityFeed() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
-        <div className="text-white text-xl">Loading activity feed...</div>
+      <div className="min-h-screen bg-brand-black flex items-center justify-center">
+        <div className="text-theme-text text-xl">Loading activity feed...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white">
+    <div className="min-h-screen bg-brand-black text-theme-text">
       {/* Header */}
-      <div className="bg-[#0f1729] border-b border-[#1e2d45] p-6">
+      <div className="bg-brand-dark border-b border-theme-border p-6">
         <div className="max-w-4xl mx-auto">
-          <Link to="/dashboard" className="text-[#00d4ff] hover:underline mb-4 inline-block">
+          <Link to="/dashboard" className="text-brand-primary hover:underline mb-4 inline-block">
             ← Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold mt-4 bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mt-4 bg-brand-primary bg-clip-text text-transparent">
             📰 Activity Feed
           </h1>
-          <p className="text-gray-400 mt-2">See what you and people you follow are up to</p>
+          <p className="text-theme-textSec mt-2">See what you and people you follow are up to</p>
         </div>
       </div>
 
       {/* Activity List */}
       <div className="max-w-4xl mx-auto p-6">
         {activities.length === 0 ? (
-          <div className="bg-[#0f1729] border border-[#1e2d45] rounded-lg p-12 text-center">
-            <p className="text-gray-400 text-lg mb-4">No activity yet</p>
-            <p className="text-gray-500 text-sm">
+          <div className="bg-brand-dark border border-theme-border rounded-lg p-12 text-center">
+            <p className="text-theme-textSec text-lg mb-4">No activity yet</p>
+            <p className="text-theme-textSec text-sm">
               Follow other users to see their activity here, or start completing topics to create your own activity!
             </p>
             <Link
               to="/leaderboard"
-              className="mt-6 inline-block px-6 py-3 bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] rounded-lg font-medium hover:opacity-90 transition-all"
+              className="mt-6 inline-block px-6 py-3 bg-brand-primary rounded-lg font-medium hover:opacity-90 transition-all"
             >
               Browse Leaderboard
             </Link>
@@ -47,11 +47,11 @@ function ActivityFeed() {
             {activities.map((activity) => (
               <div
                 key={activity.id}
-                className="bg-[#0f1729] border border-[#1e2d45] rounded-lg p-4 hover:border-[#00d4ff]/40 transition-all"
+                className="bg-brand-dark border border-theme-border rounded-lg p-4 hover:border-brand-primary/40 transition-all"
               >
                 <div className="flex items-start gap-4">
                   {/* Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] flex items-center justify-center text-lg font-bold flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-brand-primary flex items-center justify-center text-lg font-bold flex-shrink-0">
                     {activity.profiles?.full_name?.charAt(0).toUpperCase() || 'U'}
                   </div>
 
@@ -60,14 +60,14 @@ function ActivityFeed() {
                     <div className="flex items-center gap-2 mb-2">
                       <Link
                         to={`/profile/${activity.profiles?.id}`}
-                        className="font-bold text-white hover:text-[#00d4ff] transition-colors"
+                        className="font-bold text-theme-text hover:text-brand-primary transition-colors"
                       >
                         {activity.profiles?.full_name || 'Anonymous'}
                       </Link>
-                      <span className="text-gray-400">·</span>
-                      <span className="text-sm text-gray-400">{formatTime(activity.created_at)}</span>
+                      <span className="text-theme-textSec">·</span>
+                      <span className="text-sm text-theme-textSec">{formatTime(activity.created_at)}</span>
                     </div>
-                    <p className="text-gray-300">
+                    <p className="text-theme-textSec">
                       {getActivityIcon(activity.action_type)} {activity.content}
                     </p>
                   </div>

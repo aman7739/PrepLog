@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -42,7 +43,7 @@ export default function RoadmapCommunity({ templateId }) {
   }
 
   const handleRate = async (stars) => {
-    if (!user) return alert('Please login to rate roadmaps')
+    if (!user) return toast.error('Please login to rate roadmaps')
     
     try {
       const { error } = await supabase
@@ -62,7 +63,7 @@ export default function RoadmapCommunity({ templateId }) {
 
   const submitComment = async (e) => {
     e.preventDefault()
-    if (!user) return alert('Please login to comment')
+    if (!user) return toast.error('Please login to comment')
     if (!newComment.trim()) return
 
     try {
@@ -76,24 +77,24 @@ export default function RoadmapCommunity({ templateId }) {
 
       if (error) throw error
       
-      alert('Comment posted! 💬')
+      toast.success('Comment posted! 💬')
       setNewComment('')
       fetchComments() 
     } catch (error) {
       console.error('Error adding comment:', error)
-      alert('Error posting comment! Check console.')
+      toast.error('Error posting comment! Check console.')
     }
   }
 
   return (
-    <div className="mt-12 border-t border-[#1e2d45] pt-8">
-      <h3 className="text-2xl font-bold text-white mb-6">Community Discussion</h3>
+    <div className="mt-12 border-t border-theme-border pt-8">
+      <h3 className="text-2xl font-bold text-theme-text mb-6">Community Discussion</h3>
 
       {/* ⭐ Rating Section */}
-      <div className="bg-[#0f1729] p-6 rounded-xl border border-[#1e2d45] mb-8 flex items-center justify-between">
+      <div className="bg-brand-dark p-6 rounded-xl border border-theme-border mb-8 flex items-center justify-between">
         <div>
-          <h4 className="text-lg font-medium text-white">Rate this Roadmap</h4>
-          <p className="text-sm text-gray-400">Help others know if this is a good learning path!</p>
+          <h4 className="text-lg font-medium text-theme-text">Rate this Roadmap</h4>
+          <p className="text-sm text-theme-textSec">Help others know if this is a good learning path!</p>
         </div>
         <div className="flex gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
@@ -116,11 +117,11 @@ export default function RoadmapCommunity({ templateId }) {
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="Share your thoughts, tips, or questions about this roadmap..."
-          className="w-full bg-[#0f1729] border border-[#1e2d45] rounded-lg p-4 text-white focus:border-[#FF6B9D] focus:outline-none resize-none h-24 mb-3"
+          className="w-full bg-brand-dark border border-theme-border rounded-lg p-4 text-theme-text focus:border-[#FF6B9D] focus:outline-none resize-none h-24 mb-3"
         />
         <button
           type="submit"
-          className="px-6 py-2 bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] rounded-lg font-bold text-white hover:opacity-90 transition"
+          className="px-6 py-2 bg-brand-primary rounded-lg font-bold text-theme-text hover:opacity-90 transition"
         >
           Post Comment
         </button>
@@ -129,19 +130,19 @@ export default function RoadmapCommunity({ templateId }) {
       {/* 📝 Comments List */}
       <div className="space-y-4">
         {comments.length === 0 ? (
-          <p className="text-gray-400 text-center py-4">No comments yet. Be the first to start the discussion!</p>
+          <p className="text-theme-textSec text-center py-4">No comments yet. Be the first to start the discussion!</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="bg-[#0f1729] p-4 rounded-lg border border-[#1e2d45]">
+            <div key={comment.id} className="bg-brand-dark p-4 rounded-lg border border-theme-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-medium text-[#00d4ff]">
+                <span className="font-medium text-brand-primary">
                   {comment.profiles?.full_name || 'Anonymous'}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-theme-textSec">
                   {new Date(comment.created_at).toLocaleDateString()}
                 </span>
               </div>
-              <p className="text-gray-300">{comment.content}</p>
+              <p className="text-theme-textSec">{comment.content}</p>
             </div>
           ))
         )}

@@ -8,15 +8,15 @@ const SuggestedConnections = () => {
 
   if (loading) {
     return (
-      <div className="bg-[#0f1729] border border-[#1e2d45] rounded-xl p-6 animate-pulse">
-        <div className="h-4 bg-[#1e2d45] rounded w-1/2 mb-6"></div>
+      <div className="bg-brand-dark border border-theme-border rounded-xl p-6 animate-pulse">
+        <div className="h-4 bg-brand-black rounded w-1/2 mb-6"></div>
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
             <div key={i} className="flex gap-4 items-center">
-              <div className="w-10 h-10 bg-[#1e2d45] rounded-full shrink-0"></div>
+              <div className="w-10 h-10 bg-brand-black rounded-full shrink-0"></div>
               <div className="flex-1">
-                <div className="h-3 bg-[#1e2d45] rounded w-24 mb-2"></div>
-                <div className="h-2 bg-[#1e2d45] rounded w-16"></div>
+                <div className="h-3 bg-brand-black rounded w-24 mb-2"></div>
+                <div className="h-2 bg-brand-black rounded w-16"></div>
               </div>
             </div>
           ))}
@@ -32,28 +32,28 @@ const SuggestedConnections = () => {
   }
 
   return (
-    <div className="bg-[#0f1729] border border-[#1e2d45] rounded-xl p-6">
+    <div className="bg-brand-dark border border-theme-border rounded-xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-white font-bold text-lg">🤝 Suggested Connections</h3>
+        <h3 className="text-theme-text font-bold text-lg">🤝 Suggested Connections</h3>
         <button 
           onClick={refreshSuggestions}
-          className="text-xs text-[#00d4ff] hover:text-white transition-colors"
+          className="text-xs text-brand-primary hover:text-theme-text transition-colors"
         >
           Refresh
         </button>
       </div>
 
-      <p className="text-xs text-gray-400 mb-4">
+      <p className="text-xs text-theme-textSec mb-4">
         Developers taking the same roadmaps as you:
       </p>
 
       <div className="space-y-3">
         {suggestions.map(peer => (
-          <div key={peer.id} className="flex items-center justify-between gap-3 bg-[#0a0e1a] p-3 rounded-lg border border-[#1e2d45] hover:border-[#00d4ff]/30 transition-all">
+          <div key={peer.id} className="flex items-center justify-between gap-3 bg-brand-black p-3 rounded-lg border border-theme-border hover:border-brand-primary/30 transition-all">
             
             <Link to={`/profile/${peer.id}`} className="flex items-center gap-3 flex-1 min-w-0 group">
               {/* Avatar */}
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00d4ff] to-[#FF6B9D] flex items-center justify-center text-white font-bold text-sm overflow-hidden shrink-0">
+              <div className="w-10 h-10 rounded-full bg-brand-primary flex items-center justify-center text-theme-text font-bold text-sm overflow-hidden shrink-0">
                 {peer.avatar_url ? (
                   <img src={peer.avatar_url} alt={peer.username} className="w-full h-full object-cover" />
                 ) : (
@@ -63,10 +63,10 @@ const SuggestedConnections = () => {
               
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <h4 className="text-white text-sm font-semibold truncate group-hover:text-[#00d4ff] transition-colors">
+                <h4 className="text-theme-text text-sm font-semibold truncate group-hover:text-brand-primary transition-colors">
                   {peer.full_name || 'Developer'}
                 </h4>
-                <p className="text-gray-400 text-xs truncate">@{peer.username}</p>
+                <p className="text-theme-textSec text-xs truncate">@{peer.username}</p>
               </div>
             </Link>
 

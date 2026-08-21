@@ -6,52 +6,52 @@ function Leaderboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center">
-        <div className="text-white text-xl">Loading leaderboard...</div>
+      <div className="min-h-screen bg-brand-black flex items-center justify-center">
+        <div className="text-theme-text text-xl">Loading leaderboard...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white">
+    <div className="min-h-screen bg-brand-black text-theme-text">
       {/* Header */}
-      <div className="bg-[#0f1729] border-b border-[#1e2d45] p-6">
+      <div className="bg-brand-dark border-b border-theme-border p-6">
         <div className="max-w-6xl mx-auto">
-          <Link to="/dashboard" className="text-[#00d4ff] hover:underline mb-4 inline-block">
+          <Link to="/dashboard" className="text-brand-primary hover:underline mb-4 inline-block">
             ← Back to Dashboard
           </Link>
-          <h1 className="text-4xl font-bold mt-4 bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mt-4 bg-brand-primary bg-clip-text text-transparent">
             🏆 Leaderboard
           </h1>
-          <p className="text-gray-400 mt-2">Top developers ranked by topics completed</p>
+          <p className="text-theme-textSec mt-2">Top developers ranked by topics completed</p>
         </div>
       </div>
 
       {/* Leaderboard Table */}
       <div className="max-w-6xl mx-auto p-6">
         {leaders.length === 0 ? (
-          <div className="bg-[#0f1729] border border-[#1e2d45] rounded-lg p-12 text-center">
-            <p className="text-gray-400 text-lg">No data available yet</p>
+          <div className="bg-brand-dark border border-theme-border rounded-lg p-12 text-center">
+            <p className="text-theme-textSec text-lg">No data available yet</p>
           </div>
         ) : (
-          <div className="bg-[#0f1729] border border-[#1e2d45] rounded-lg overflow-hidden">
+          <div className="bg-brand-dark border border-theme-border rounded-lg overflow-hidden">
             <table className="w-full">
-              <thead className="bg-[#0a0e1a] border-b border-[#1e2d45]">
+              <thead className="bg-brand-black border-b border-theme-border">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">Rank</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-400">User</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-400">Topics</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-400">Streak</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-400">Followers</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-400">Badges</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-400">Action</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-theme-textSec">Rank</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-theme-textSec">User</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-theme-textSec">Topics</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-theme-textSec">Streak</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-theme-textSec">Followers</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-theme-textSec">Badges</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-theme-textSec">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {leaders.map((leader, index) => (
                   <tr
                     key={leader.id}
-                    className={`border-b border-[#1e2d45] hover:bg-[#0a0e1a]/50 transition-all ${
+                    className={`border-b border-theme-border hover:bg-brand-black/50 transition-all ${
                       index < 3 ? 'bg-gradient-to-r from-yellow-500/5 to-transparent' : ''
                     }`}
                   >
@@ -61,7 +61,7 @@ function Leaderboard() {
                         {index === 0 && <span className="text-2xl">🥇</span>}
                         {index === 1 && <span className="text-2xl">🥈</span>}
                         {index === 2 && <span className="text-2xl">🥉</span>}
-                        <span className={`text-lg font-bold ${index < 3 ? 'text-yellow-400' : 'text-white'}`}>
+                        <span className={`text-lg font-bold ${index < 3 ? 'text-yellow-400' : 'text-theme-text'}`}>
                           #{leader.rank}
                         </span>
                       </div>
@@ -70,20 +70,20 @@ function Leaderboard() {
                     {/* User */}
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] flex items-center justify-center text-lg font-bold">
+                        <div className="w-10 h-10 rounded-full bg-brand-primary flex items-center justify-center text-lg font-bold">
                           {leader.full_name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         <div>
-                          <div className="font-medium text-white">{leader.full_name || 'Anonymous'}</div>
+                          <div className="font-medium text-theme-text">{leader.full_name || 'Anonymous'}</div>
                           {/* ✅ NEW: Replaced Email with Username */}
-                          <div className="text-sm text-[#00d4ff]">@{leader.username || 'unknown'}</div>
+                          <div className="text-sm text-brand-primary">@{leader.username || 'unknown'}</div>
                         </div>
                       </div>
                     </td>
 
                     {/* Topics */}
                     <td className="px-6 py-4 text-center">
-                      <div className="text-xl font-bold text-[#00d4ff]">{leader.topics_completed || 0}</div>
+                      <div className="text-xl font-bold text-brand-primary">{leader.topics_completed || 0}</div>
                     </td>
 
                     {/* Streak */}
@@ -105,7 +105,7 @@ function Leaderboard() {
                           </span>
                         ))}
                         {leader.badges?.length > 3 && (
-                          <span className="text-xs text-gray-400">+{leader.badges.length - 3}</span>
+                          <span className="text-xs text-theme-textSec">+{leader.badges.length - 3}</span>
                         )}
                       </div>
                     </td>
@@ -114,7 +114,7 @@ function Leaderboard() {
                     <td className="px-6 py-4 text-center">
                       <Link
                         to={`/profile/${leader.id}`}
-                        className="px-4 py-2 bg-gradient-to-r from-[#00d4ff] to-[#FF6B9D] rounded-lg text-sm font-medium text-black hover:opacity-90 transition-all inline-block"
+                        className="px-4 py-2 bg-brand-primary rounded-lg text-sm font-medium text-black hover:opacity-90 transition-all inline-block"
                       >
                         View Profile
                       </Link>
