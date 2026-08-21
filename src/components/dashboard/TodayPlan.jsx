@@ -18,17 +18,17 @@ function TodayPlan({ roadmaps, tasks }) {
   })
 
   return (
-    <div className="bg-[#0d1526] border border-[#1e2d45] rounded-2xl p-5">
+    <div className="bg-brand-dark border border-theme-border rounded-2xl p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-white font-bold text-sm">Today's Plan</h3>
-          <p className="text-gray-500 text-xs mt-0.5">
+          <h3 className="text-theme-text font-bold text-sm">Today's Plan</h3>
+          <p className="text-theme-textSec text-xs mt-0.5">
             {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
           </p>
         </div>
         {todayTasks.length > 0 && (
-          <span className="text-xs text-gray-500">
-            <span className="text-green-400 font-bold">{doneTasks.length}</span>/{todayTasks.length} done
+          <span className="text-xs text-theme-textSec">
+            <span className="text-green-500 font-bold">{doneTasks.length}</span>/{todayTasks.length} done
           </span>
         )}
       </div>
@@ -40,11 +40,11 @@ function TodayPlan({ roadmaps, tasks }) {
               <div className={`w-4 h-4 rounded border flex items-center justify-center text-[10px] flex-shrink-0 ${
                 t.done
                   ? 'bg-green-400/20 border-green-400/40 text-green-400'
-                  : 'border-[#1e2d45]'
+                  : 'border-theme-border'
               }`}>
                 {t.done ? '✓' : ''}
               </div>
-              <span className={`text-sm ${t.done ? 'line-through text-gray-600' : 'text-gray-300'}`}>
+              <span className={`text-sm ${t.done ? 'line-through text-theme-textSec' : 'text-theme-text'}`}>
                 {t.text}
               </span>
             </div>
@@ -54,15 +54,15 @@ function TodayPlan({ roadmaps, tasks }) {
 
       {suggestions.length > 0 ? (
         <div className="space-y-2">
-          <p className="text-gray-600 text-xs uppercase tracking-wider font-bold mb-2">
+          <p className="text-theme-textSec text-xs uppercase tracking-wider font-bold mb-2">
             {todayTasks.length > 0 ? 'Active Roadmaps' : 'Suggested Focus'}
           </p>
           {suggestions.map((s, i) => (
-            <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-[#111827] border border-[#1e2d45]">
+            <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-brand-black border border-theme-border">
               <span className="text-lg">{s.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-300 text-xs font-semibold truncate">{s.title}</p>
-                <p className="text-gray-600 text-[10px]">{s.hint}</p>
+                <p className="text-theme-text text-xs font-semibold truncate">{s.title}</p>
+                <p className="text-theme-textSec text-[10px]">{s.hint}</p>
               </div>
               <span className="text-[10px] text-gray-600 capitalize">{s.category}</span>
             </div>

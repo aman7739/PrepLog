@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
@@ -106,7 +107,7 @@ export function useFollow(targetUserId) {
       }
     } catch (error) {
       console.error('Error toggling follow:', error)
-      alert('Failed to update follow status')
+      toast.error('Failed to update follow status')
     }
   }
 

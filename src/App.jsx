@@ -21,16 +21,17 @@ import Leaderboard from './pages/Leaderboard'
 import ActivityFeed from './pages/ActivityFeed'
 // Day 11 Import
 import ChatMessenger from './pages/ChatMessenger' 
+import Layout from './components/Layout'
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth()
-  if (loading) return <div className="min-h-screen bg-[#0a0e1a]" />
+  if (loading) return <div className="min-h-screen bg-brand-black" />
   return user ? children : <Navigate to="/login" />
 }
 
 const PublicRoute = ({ children }) => {
   const { user, loading } = useAuth()
-  if (loading) return <div className="min-h-screen bg-[#0a0e1a]" />
+  if (loading) return <div className="min-h-screen bg-brand-black" />
   return !user ? children : <Navigate to="/dashboard" />
 }
 
@@ -64,7 +65,7 @@ const DashboardRoute = () => {
     else setChecking(false)
   }, [user])
 
-  if (loading || checking) return <div className="min-h-screen bg-[#0a0e1a]" />
+  if (loading || checking) return <div className="min-h-screen bg-brand-black" />
   if (!user) return <Navigate to="/login" />
   
   // if (hasRoadmap === false) return <Navigate to="/select-roadmap" />
@@ -72,34 +73,45 @@ const DashboardRoute = () => {
   return <Dashboard />
 }
 
+import { Toaster } from 'react-hot-toast'
+
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-      
-      {/* Magic Link Reset Route */}
-      <Route path="/update-password" element={<PublicRoute><UpdatePassword /></PublicRoute>} />
-      
-      <Route path="/dashboard" element={<DashboardRoute />} />
-      <Route path="/select-roadmap" element={<ProtectedRoute><SelectRoadmap /></ProtectedRoute>} />
-      <Route path="/platforms" element={<ProtectedRoute><Platforms /></ProtectedRoute>} />
-      <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
-      <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
-      <Route path="/roadmap/:id" element={<ProtectedRoute><RoadmapDetail /></ProtectedRoute>} />
-      <Route path="/roadmap-builder" element={<ProtectedRoute><RoadmapBuilder /></ProtectedRoute>} />
-      <Route path="/browse" element={<ProtectedRoute><BrowseRoadmaps /></ProtectedRoute>} />
-      <Route path="/profile/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-      <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
-      <Route path="/activity" element={<ProtectedRoute><ActivityFeed /></ProtectedRoute>} />
-      
-      {/* Day 11 - Real-time Chat Route */}
-      <Route path="/chat" element={<ProtectedRoute><ChatMessenger /></ProtectedRoute>} />
-
-      {/* Day 13 - Admin Dashboard Route */}
-      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-    </Routes>
+    <>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1a1a1a',
+            color: '#fff',
+            border: '1px solid #333'
+          }
+        }}
+      />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+        <Route path="/update-password" element={<UpdatePassword />} />
+        
+        {/* Protected Routes wrapped in Layout */}
+        <Route element={<Layout />}>
+          <Route path="/dashboard" element={<DashboardRoute />} />
+          <Route path="/select-roadmap" element={<ProtectedRoute><SelectRoadmap /></ProtectedRoute>} />
+          <Route path="/platforms" element={<ProtectedRoute><Platforms /></ProtectedRoute>} />
+          <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
+          <Route path="/notes" element={<ProtectedRoute><Notes /></ProtectedRoute>} />
+          <Route path="/roadmap/:id" element={<ProtectedRoute><RoadmapDetail /></ProtectedRoute>} />
+          <Route path="/roadmap-builder" element={<ProtectedRoute><RoadmapBuilder /></ProtectedRoute>} />
+          <Route path="/browse" element={<ProtectedRoute><BrowseRoadmaps /></ProtectedRoute>} />
+          <Route path="/profile/:userId" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+          <Route path="/activity" element={<ProtectedRoute><ActivityFeed /></ProtectedRoute>} />
+          <Route path="/chat" element={<ProtectedRoute><ChatMessenger /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        </Route>
+      </Routes>
+    </>
   )
 }
 

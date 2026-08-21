@@ -1,7 +1,7 @@
 function BadgeDisplay({ badges }) {
   if (!badges || badges.length === 0) {
     return (
-      <div className="text-gray-400 text-sm">No badges yet</div>
+      <div className="text-theme-textSec text-sm">No badges yet</div>
     )
   }
 
@@ -10,7 +10,7 @@ function BadgeDisplay({ badges }) {
       {badges.map((badge) => (
         <div
           key={badge.badge_type}
-          className="bg-[#0f1729] border border-[#1e2d45] rounded-lg px-3 py-2 flex items-center gap-2 text-sm hover:border-[#00d4ff]/40 transition-all"
+          className="bg-brand-dark border border-theme-border rounded-lg px-3 py-2 flex items-center gap-2 text-sm hover:border-brand-primary/40 transition-all"
           title={`Earned on ${new Date(badge.earned_at).toLocaleDateString()}`}
         >
           <span className="text-lg">{getBadgeEmoji(badge.badge_type)}</span>

@@ -11,15 +11,19 @@ const PLATFORMS = [
     border: 'border-yellow-400/30',
     bg: 'bg-yellow-400/5',
     placeholder: 'your-leetcode-username',
+    url: 'https://leetcode.com',
+    profileUrl: (u) => `https://leetcode.com/u/${u}`
   },
   {
     id: 'github',
     name: 'GitHub',
     icon: '🐙',
-    color: 'text-white',
-    border: 'border-white/20',
-    bg: 'bg-white/5',
+    color: 'text-brand-primary',
+    border: 'border-theme-border',
+    bg: 'bg-brand-black',
     placeholder: 'your-github-username',
+    url: 'https://github.com',
+    profileUrl: (u) => `https://github.com/${u}`
   },
   {
     id: 'codeforces',
@@ -29,6 +33,8 @@ const PLATFORMS = [
     border: 'border-blue-400/30',
     bg: 'bg-blue-400/5',
     placeholder: 'your-cf-handle',
+    url: 'https://codeforces.com',
+    profileUrl: (u) => `https://codeforces.com/profile/${u}`
   },
   {
     id: 'codechef',
@@ -38,6 +44,8 @@ const PLATFORMS = [
     border: 'border-amber-600/30',
     bg: 'bg-amber-600/5',
     placeholder: 'your-codechef-username',
+    url: 'https://www.codechef.com',
+    profileUrl: (u) => `https://www.codechef.com/users/${u}`
   },
   {
     id: 'gfg',
@@ -47,6 +55,8 @@ const PLATFORMS = [
     border: 'border-green-400/30',
     bg: 'bg-green-400/5',
     placeholder: 'your-gfg-username',
+    url: 'https://www.geeksforgeeks.org',
+    profileUrl: (u) => `https://www.geeksforgeeks.org/user/${u}`
   },
   {
     id: 'hackerrank',
@@ -56,6 +66,8 @@ const PLATFORMS = [
     border: 'border-emerald-400/30',
     bg: 'bg-emerald-400/5',
     placeholder: 'your-hackerrank-username',
+    url: 'https://www.hackerrank.com',
+    profileUrl: (u) => `https://www.hackerrank.com/profile/${u}`
   },
 ]
 
@@ -95,24 +107,37 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
   }
 
   return (
-    <div className={`bg-[#0d1526] border ${connected ? platform.border : 'border-[#1e2d45]'} rounded-2xl p-5 transition-all`}>
+    <div className={`bg-brand-dark border ${connected ? platform.border : 'border-theme-border'} rounded-2xl p-5 transition-all`}>
       
       {/* Header Row */}
-      <div className="flex items-center gap-3 mb-3">
-        <span className="text-2xl flex-shrink-0">{platform.icon}</span>
-        <div className="flex-1 min-w-0">
-          <h3 className={`font-bold text-sm ${connected ? platform.color : 'text-white'}`}>
-            {platform.name}
-          </h3>
-          {connected && !editing && (
-            <p className="text-gray-500 text-xs truncate">@{connected.username}</p>
-          )}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl flex-shrink-0">{platform.icon}</span>
+          <div className="flex-1 min-w-0">
+            <h3 className={`font-bold text-sm ${connected ? platform.color : 'text-theme-text'}`}>
+              {platform.name}
+            </h3>
+            {connected && !editing && (
+              <p className="text-theme-textSec text-xs truncate">@{connected.username}</p>
+            )}
+          </div>
         </div>
-        {connected && (
-          <span className="flex-shrink-0 text-[10px] bg-green-400/10 text-green-400 px-2 py-1 rounded-full font-bold border border-green-400/20">
-            ✓
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {connected && (
+            <span className="flex-shrink-0 text-[10px] bg-green-400/10 text-green-400 px-2 py-1 rounded-full font-bold border border-green-400/20">
+              ✓
+            </span>
+          )}
+          <a 
+             href={connected && !editing ? platform.profileUrl(connected.username) : platform.url} 
+             target="_blank" 
+             rel="noopener noreferrer"
+             title={`Visit ${platform.name}`}
+             className="text-xs border border-theme-border text-theme-textSec px-2 py-1 rounded-md hover:border-brand-primary hover:text-brand-primary transition-all flex items-center gap-1 bg-brand-black shadow-sm"
+          >
+             Visit <span className="text-[10px]">↗</span>
+          </a>
+        </div>
       </div>
 
       {/* Edit / Disconnect buttons */}
@@ -120,13 +145,13 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
         <div className="flex gap-2 mb-3">
           <button
             onClick={() => setEditing(true)}
-            className="text-xs border border-[#1e2d45] text-gray-400 px-3 py-1.5 rounded-lg hover:border-[#00d4ff]/40 hover:text-[#00d4ff] transition-all"
+            className="text-xs border border-theme-border text-theme-textSec px-3 py-1.5 rounded-lg hover:border-brand-primary/40 hover:text-brand-primary transition-all"
           >
             ✏️ Edit
           </button>
           <button
             onClick={() => setConfirming(true)}
-            className="text-xs border border-[#1e2d45] text-gray-400 px-3 py-1.5 rounded-lg hover:border-red-500/40 hover:text-red-400 transition-all"
+            className="text-xs border border-theme-border text-theme-textSec px-3 py-1.5 rounded-lg hover:border-red-500/40 hover:text-red-400 transition-all"
           >
             🔌 Disconnect
           </button>
@@ -142,13 +167,13 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
           <div className="flex gap-2">
             <button
               onClick={handleDisconnect}
-              className="bg-red-500 hover:bg-red-400 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
+              className="bg-red-500 hover:bg-red-400 text-theme-text text-xs font-bold px-3 py-1.5 rounded-lg transition-all"
             >
               Yes, Remove
             </button>
             <button
               onClick={() => setConfirming(false)}
-              className="border border-[#1e2d45] text-gray-400 text-xs px-3 py-1.5 rounded-lg hover:border-gray-500 transition-all"
+              className="border border-theme-border text-theme-textSec text-xs px-3 py-1.5 rounded-lg hover:border-gray-500 transition-all"
             >
               Cancel
             </button>
@@ -165,19 +190,19 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
             onChange={e => setUsername(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSave()}
             placeholder={platform.placeholder}
-            className="flex-1 bg-[#111827] border border-[#1e2d45] text-white text-sm px-3 py-2 rounded-xl focus:outline-none focus:border-[#00d4ff] transition-all placeholder-gray-600"
+            className="flex-1 dark:bg-[#1F1F1F] bg-[#FAEDE5] border border-theme-border text-theme-text text-sm px-3 py-2 rounded-xl focus:outline-none focus:border-brand-primary transition-all placeholder-gray-500"
           />
           <button
             onClick={handleSave}
             disabled={!username.trim()}
-            className="bg-[#00d4ff] hover:bg-[#00b4d8] disabled:opacity-40 text-black font-bold px-4 py-2 rounded-xl text-sm transition-all"
+            className="bg-brand-primary hover:opacity-90 disabled:opacity-40 text-white font-bold px-4 py-2 rounded-xl text-sm transition-all"
           >
             Save
           </button>
           {connected && (
             <button
               onClick={() => { setEditing(false); setUsername(connected.username) }}
-              className="border border-[#1e2d45] text-gray-500 px-3 py-2 rounded-xl text-sm hover:border-red-500/40 hover:text-red-400 transition-all"
+              className="border border-theme-border text-theme-textSec px-3 py-2 rounded-xl text-sm hover:border-red-500/40 hover:text-red-400 transition-all"
             >
               ✕
             </button>
@@ -203,7 +228,7 @@ function PlatformCard({ platform, connected, stats, onSave, onSync, onDelete, sy
           <button
             onClick={() => onSync(platform.id, connected.username)}
             disabled={syncing === platform.id}
-            className="text-xs text-[#00d4ff] hover:underline disabled:opacity-40 transition-all"
+            className="text-xs text-brand-primary hover:underline disabled:opacity-40 transition-all"
           >
             {syncing === platform.id ? '⏳ Syncing...' : '🔄 Sync Stats'}
           </button>
@@ -252,7 +277,7 @@ function PlatformStats({ platformId, stats, color }) {
           <div className="text-gray-600 text-[10px]">Followers</div>
         </div>
         <div>
-          <div className="text-lg font-black text-[#00d4ff]">{stats.following || 0}</div>
+          <div className="text-lg font-black text-brand-primary">{stats.following || 0}</div>
           <div className="text-gray-600 text-[10px]">Following</div>
         </div>
       </div>
@@ -298,7 +323,7 @@ function PlatformStats({ platformId, stats, color }) {
           <div className="text-gray-600 text-[10px]">Solved</div>
         </div>
         <div>
-          <div className="text-lg font-black text-white capitalize">{stats.rank || '—'}</div>
+          <div className="text-lg font-black text-theme-text capitalize">{stats.rank || '—'}</div>
           <div className="text-gray-600 text-[10px]">Rank</div>
         </div>
       </div>
@@ -320,7 +345,7 @@ function PlatformStats({ platformId, stats, color }) {
           </div>
         </div>
         <div>
-          <div className={`text-lg font-black ${badgeCount > 0 ? 'text-yellow-400' : 'text-gray-500'}`}>
+          <div className={`text-lg font-black ${badgeCount > 0 ? 'text-yellow-400' : 'text-theme-textSec'}`}>
             {badgeCount} 🏆
           </div>
           <div className="text-gray-600 text-[10px] truncate" title={topBadge}>
@@ -345,19 +370,19 @@ function Platforms() {
   const { platforms, statsMap, loading, savePlatform, syncPlatform, syncing, deletePlatform } = usePlatforms()
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a]">
+    <div className="min-h-screen bg-brand-black">
       {/* Navbar */}
-      <div className="sticky top-0 z-10 bg-[#0a0e1a]/95 backdrop-blur border-b border-[#1e2d45] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-brand-black/95 backdrop-blur border-b border-theme-border px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center gap-4">
           <button 
             onClick={() => navigate('/dashboard')} 
-            className="text-gray-500 hover:text-white transition-colors text-sm"
+            className="text-theme-textSec hover:text-theme-text transition-colors text-sm"
           >
             ← Dashboard
           </button>
-          <h1 className="text-xl font-black text-white">
-            Prep<span className="text-[#00d4ff]">Log</span>
-            <span className="text-gray-500 font-normal text-base ml-2">/ Platforms</span>
+          <h1 className="text-xl font-black text-theme-text">
+            Prep<span className="text-brand-primary">Log</span>
+            <span className="text-theme-textSec font-normal text-base ml-2">/ Platforms</span>
           </h1>
         </div>
       </div>
@@ -366,15 +391,15 @@ function Platforms() {
         
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-white text-2xl font-black mb-2">Connect Platforms</h2>
-          <p className="text-gray-400 text-sm">Link your coding profiles to track stats automatically.</p>
+          <h2 className="text-theme-text text-2xl font-black mb-2">Connect Platforms</h2>
+          <p className="text-theme-textSec text-sm">Link your coding profiles to track stats automatically.</p>
         </div>
 
         {/* Connected count */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-[#00d4ff]/10 border border-[#00d4ff]/20 rounded-xl px-4 py-2">
-            <span className="text-[#00d4ff] font-bold">{platforms.length}</span>
-            <span className="text-gray-400 text-sm ml-1">/ {PLATFORMS.length} connected</span>
+          <div className="bg-brand-primary/10 border border-brand-primary/20 rounded-xl px-4 py-2">
+            <span className="text-brand-primary font-bold">{platforms.length}</span>
+            <span className="text-theme-textSec text-sm ml-1">/ {PLATFORMS.length} connected</span>
           </div>
           {platforms.length > 0 && (
             <div className="flex gap-1">
@@ -392,7 +417,7 @@ function Platforms() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[1,2,3,4,5,6].map(i => (
-              <div key={i} className="bg-[#0d1526] border border-[#1e2d45] rounded-2xl p-5 animate-pulse h-32" />
+              <div key={i} className="bg-brand-dark border border-theme-border rounded-2xl p-5 animate-pulse h-32" />
             ))}
           </div>
         ) : (

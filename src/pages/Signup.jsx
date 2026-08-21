@@ -48,19 +48,19 @@ function Signup() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-4">
-        <div className="bg-[#111827] border border-[#1e2d45] rounded-2xl p-8 w-full max-w-md text-center">
+      <div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
+        <div className="bg-theme-card border border-theme-border rounded-2xl p-8 w-full max-w-md text-center shadow-lg">
           <div className="text-5xl mb-4">📧</div>
-          <h2 className="text-white text-2xl font-bold mb-3">Check your email!</h2>
-          <p className="text-gray-400">
-            We sent a confirmation link to <span className="text-[#00d4ff]">{email}</span>
+          <h2 className="text-theme-text text-2xl font-bold mb-3">Check your email!</h2>
+          <p className="text-theme-textSec">
+            We sent a confirmation link to <span className="text-brand-primary">{email}</span>
           </p>
-          <p className="text-gray-500 text-sm mt-3">
+          <p className="text-theme-textSec text-sm mt-3">
             Click the link to activate your account
           </p>
           <button
             onClick={() => navigate('/login')}
-            className="mt-6 border border-[#1e2d45] text-white px-6 py-3 rounded-xl hover:border-[#00d4ff] transition-all"
+            className="mt-6 border border-theme-border text-theme-text px-6 py-3 rounded-xl hover:border-brand-primary transition-all"
           >
             Go to Login
           </button>
@@ -70,21 +70,21 @@ function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] flex items-center justify-center px-4">
-      <div className="bg-[#111827] border border-[#1e2d45] rounded-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-brand-black flex items-center justify-center px-4">
+      <div className="bg-theme-card border border-theme-border rounded-2xl p-8 w-full max-w-md shadow-lg">
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-white">
-            Prep<span className="text-[#00d4ff]">Log</span>
+          <h1 className="text-4xl font-black text-theme-text">
+            Prep<span className="text-brand-primary">Log</span>
           </h1>
-          <p className="text-gray-400 mt-2">Create your free account</p>
+          <p className="text-theme-textSec mt-2">Create your free account</p>
         </div>
 
         {/* Google Button */}
         <button
           onClick={handleGoogle}
-          className="w-full border border-[#1e2d45] text-white py-3 rounded-xl font-semibold hover:border-[#00d4ff] transition-all flex items-center justify-center gap-3 mb-6"
+          className="w-full border border-theme-border bg-theme-card text-theme-text py-3 rounded-xl font-semibold hover:border-brand-primary transition-all flex items-center justify-center gap-3 mb-6 shadow-sm"
         >
           <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="Google Logo" />
           Continue with Google
@@ -93,7 +93,7 @@ function Signup() {
         {/* Divider */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1 h-px bg-[#1e2d45]"></div>
-          <span className="text-gray-500 text-sm">or</span>
+          <span className="text-theme-textSec text-sm">or</span>
           <div className="flex-1 h-px bg-[#1e2d45]"></div>
         </div>
 
@@ -106,20 +106,20 @@ function Signup() {
           )}
 
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">Full Name</label>
+            <label className="text-theme-textSec text-sm mb-2 block">Full Name</label>
             <input
               type="text"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Aman Kumar"
               required
-              className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
+              className="w-full bg-theme-input border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
           </div>
 
           {/* ✅ NEW: Username Field */}
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">Username</label>
+            <label className="text-theme-textSec text-sm mb-2 block">Username</label>
             <input
               type="text"
               value={username}
@@ -128,24 +128,24 @@ function Signup() {
               required
               minLength={3}
               maxLength={20}
-              className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
+              className="w-full bg-theme-input border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
           </div>
 
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">Email</label>
+            <label className="text-theme-textSec text-sm mb-2 block">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
+              className="w-full bg-theme-input border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
           </div>
 
           <div>
-            <label className="text-gray-400 text-sm mb-2 block">Password</label>
+            <label className="text-theme-textSec text-sm mb-2 block">Password</label>
             <input
               type="password"
               value={password}
@@ -153,22 +153,22 @@ function Signup() {
               placeholder="••••••••"
               required
               minLength={6}
-              className="w-full bg-[#1a2235] border border-[#1e2d45] text-white rounded-xl px-4 py-3 outline-none focus:border-[#00d4ff] transition-all"
+              className="w-full bg-theme-input border border-theme-border text-theme-text rounded-xl px-4 py-3 outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary transition-all"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#00d4ff] text-black font-bold py-3 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 mt-2"
+            className="bg-brand-primary text-white font-bold py-3 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 mt-2 shadow-md"
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-theme-textSec text-sm mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-[#00d4ff] hover:underline">
+          <Link to="/login" className="text-brand-primary hover:underline font-medium">
             Login
           </Link>
         </p>

@@ -17,19 +17,19 @@ function Tasks() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a]">
+    <div className="min-h-screen bg-brand-black">
       {/* Navbar */}
-      <div className="sticky top-0 z-10 bg-[#0a0e1a]/95 backdrop-blur border-b border-[#1e2d45] px-6 py-4">
+      <div className="sticky top-0 z-10 bg-brand-black/95 backdrop-blur border-b border-theme-border px-6 py-4">
         <div className="max-w-5xl mx-auto flex items-center gap-4">
           <button
             onClick={() => navigate('/dashboard')}
-            className="text-gray-500 hover:text-white transition-colors text-sm"
+            className="text-theme-textSec hover:text-theme-text transition-colors text-sm"
           >
             ← Dashboard
           </button>
-          <h1 className="text-xl font-black text-white">
-            Prep<span className="text-[#00d4ff]">Log</span>
-            <span className="text-gray-500 font-normal text-base ml-2">/ Tasks</span>
+          <h1 className="text-xl font-black text-theme-text">
+            Prep<span className="text-brand-primary">Log</span>
+            <span className="text-theme-textSec font-normal text-base ml-2">/ Tasks</span>
           </h1>
         </div>
       </div>
@@ -37,21 +37,21 @@ function Tasks() {
       <div className="max-w-5xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h2 className="text-white text-2xl font-black mb-2">Daily Tasks</h2>
-          <p className="text-gray-400 text-sm">Track your daily coding goals.</p>
+          <h2 className="text-theme-text text-2xl font-black mb-2">Daily Tasks</h2>
+          <p className="text-theme-textSec text-sm">Track your daily coding goals.</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#0d1526] border border-[#1e2d45] rounded-xl p-4">
-            <div className="text-[#00d4ff] font-black text-2xl">{stats.total}</div>
+          <div className="bg-brand-dark border border-theme-border rounded-xl p-4">
+            <div className="text-brand-primary font-black text-2xl">{stats.total}</div>
             <div className="text-gray-600 text-xs mt-1">Total</div>
           </div>
-          <div className="bg-[#0d1526] border border-[#1e2d45] rounded-xl p-4">
+          <div className="bg-brand-dark border border-theme-border rounded-xl p-4">
             <div className="text-green-400 font-black text-2xl">{stats.done}</div>
             <div className="text-gray-600 text-xs mt-1">Done</div>
           </div>
-          <div className="bg-[#0d1526] border border-[#1e2d45] rounded-xl p-4">
+          <div className="bg-brand-dark border border-theme-border rounded-xl p-4">
             <div className="text-yellow-400 font-black text-2xl">{stats.pending}</div>
             <div className="text-gray-600 text-xs mt-1">Pending</div>
           </div>
@@ -59,8 +59,8 @@ function Tasks() {
 
         {/* Add Task Form */}
         <form onSubmit={handleAddTask} className="mb-8">
-          <div className="bg-[#0d1526] border border-[#1e2d45] rounded-2xl p-5">
-            <label className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2 block">
+          <div className="bg-brand-dark border border-theme-border rounded-2xl p-5">
+            <label className="text-theme-textSec text-xs font-bold uppercase tracking-wider mb-2 block">
               Add New Task
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -69,12 +69,12 @@ function Tasks() {
                 value={newTaskText}
                 onChange={e => setNewTaskText(e.target.value)}
                 placeholder="E.g., Solve 5 LeetCode problems..."
-                className="flex-1 bg-[#111827] border border-[#1e2d45] text-white text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-[#00d4ff] placeholder-gray-600 transition-all"
+                className="flex-1 bg-[#111827] border border-theme-border text-theme-text text-sm px-4 py-3 rounded-xl focus:outline-none focus:border-brand-primary placeholder-gray-600 transition-all"
               />
               <select
                 value={selectedCategory}
                 onChange={e => setSelectedCategory(e.target.value)}
-                className="bg-[#111827] border border-[#1e2d45] text-white text-sm px-3 py-3 rounded-xl focus:outline-none focus:border-[#00d4ff] transition-all"
+                className="bg-[#111827] border border-theme-border text-theme-text text-sm px-3 py-3 rounded-xl focus:outline-none focus:border-brand-primary transition-all"
               >
                 <option value="general">General</option>
                 <option value="leetcode">LeetCode</option>
@@ -84,7 +84,7 @@ function Tasks() {
               <button
                 type="submit"
                 disabled={!newTaskText.trim()}
-                className="bg-[#00d4ff] hover:bg-[#00b4d8] disabled:opacity-40 text-black font-bold px-6 py-3 rounded-xl transition-all whitespace-nowrap"
+                className="bg-brand-primary hover:opacity-90 disabled:opacity-40 text-black font-bold px-6 py-3 rounded-xl transition-all whitespace-nowrap"
               >
                 Add Task
               </button>
@@ -96,24 +96,24 @@ function Tasks() {
         {loading ? (
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className="bg-[#0d1526] border border-[#1e2d45] rounded-xl p-4 animate-pulse h-20" />
+              <div key={i} className="bg-brand-dark border border-theme-border rounded-xl p-4 animate-pulse h-20" />
             ))}
           </div>
         ) : tasks.length === 0 ? (
-          <div className="bg-[#0d1526] border border-[#1e2d45]/50 rounded-2xl p-12 text-center">
+          <div className="bg-brand-dark border border-theme-border/50 rounded-2xl p-12 text-center">
             <div className="text-4xl mb-3">📋</div>
-            <h3 className="text-white font-bold mb-2">No tasks yet</h3>
-            <p className="text-gray-500 text-sm">Create a task to get started!</p>
+            <h3 className="text-theme-text font-bold mb-2">No tasks yet</h3>
+            <p className="text-theme-textSec text-sm">Create a task to get started!</p>
           </div>
         ) : (
           <div className="space-y-3">
             {tasks.map(task => (
               <div
                 key={task.id}
-                className={`bg-[#0d1526] border rounded-xl p-4 flex items-start gap-3 transition-all ${
+                className={`bg-brand-dark border rounded-xl p-4 flex items-start gap-3 transition-all ${
                   task.done
                     ? 'border-green-400/20 opacity-60'
-                    : 'border-[#1e2d45]'
+                    : 'border-theme-border'
                 }`}
               >
                 {/* Checkbox */}
@@ -122,7 +122,7 @@ function Tasks() {
                   className={`flex-shrink-0 w-6 h-6 rounded-lg border-2 flex items-center justify-center mt-1 transition-all ${
                     task.done
                       ? 'bg-green-400/20 border-green-400 text-green-400'
-                      : 'border-[#1e2d45] hover:border-[#00d4ff]/40'
+                      : 'border-theme-border hover:border-brand-primary/40'
                   }`}
                 >
                   {task.done && '✓'}
@@ -133,14 +133,14 @@ function Tasks() {
                   <p
                     className={`font-semibold ${
                       task.done
-                        ? 'text-gray-500 line-through'
-                        : 'text-white'
+                        ? 'text-theme-textSec line-through'
+                        : 'text-theme-text'
                     }`}
                   >
                     {task.text}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className="text-xs px-2 py-1 rounded-full bg-[#00d4ff]/10 text-[#00d4ff] border border-[#00d4ff]/20">
+                    <span className="text-xs px-2 py-1 rounded-full bg-brand-primary/10 text-brand-primary border border-brand-primary/20">
                       {task.category}
                     </span>
                     <span className="text-gray-600 text-xs">
@@ -152,7 +152,7 @@ function Tasks() {
                 {/* Delete Button */}
                 <button
                   onClick={() => deleteTask(task.id)}
-                  className="text-gray-500 hover:text-red-400 transition-colors text-sm"
+                  className="text-theme-textSec hover:text-red-400 transition-colors text-sm"
                 >
                   🗑️
                 </button>
