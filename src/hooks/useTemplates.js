@@ -9,7 +9,7 @@ export const useTemplates = () => {
     const fetchTemplates = async () => {
       const { data, error } = await supabase
         .from('roadmap_templates')
-        .select('*')
+        .select('id, title, description, category, difficulty, icon, duration_weeks')
         .eq('is_default', true)
         .order('category')
 

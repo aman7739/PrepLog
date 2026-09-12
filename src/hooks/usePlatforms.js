@@ -18,14 +18,14 @@ export const usePlatforms = () => {
     try {
       const { data: pData } = await supabase
         .from('platforms')
-        .select('*')
+        .select('id, platform, username, connected_at, last_synced')
         .eq('user_id', user.id)
 
       setPlatforms(pData || [])
 
       const { data: sData } = await supabase
         .from('platform_stats')
-        .select('*')
+        .select('platform, stats, fetched_at')
         .eq('user_id', user.id)
 
       const map = {}

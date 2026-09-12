@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
 
@@ -25,34 +25,47 @@ const ChatSidebar = ({ onSelectConvo, activeConvoId }) => {
   const [isSearching, setIsSearching] = useState(false);
   const { user } = useAuth();
 
+  // Use a ref so the realtime callback always has the latest activeConvoId
+  // without causing the useEffect to re-run (and re-subscribe)
+  const activeConvoIdRef = useRef(activeConvoId);
+  useEffect(() => {
+    activeConvoIdRef.current = activeConvoId;
+  }, [activeConvoId]);
+
   useEffect(() => {
     const fetchConvosAndUnread = async () => {
       // 1. Fetch conversations
       const { data: convoData, error } = await supabase
         .from('conversations')
         .select(`
-          *,
+          id, user1_id, user2_id, last_message, last_message_at,
           user1:profiles!conversations_user1_id_fkey ( id, username, avatar_url ),
           user2:profiles!conversations_user2_id_fkey ( id, username, avatar_url )
         `)
         .or(`user1_id.eq.${user.id},user2_id.eq.${user.id}`)
         .order('last_message_at', { ascending: false });
 
-      if (!error && convoData) setConvos(convoData);
+      if (!error && convoData) {
+        setConvos(convoData);
 
-      // 2. Fetch unread counts from messages table
-      const { data: unreadData } = await supabase
-        .from('messages')
-        .select('conversation_id')
-        .eq('is_read', false)
-        .neq('sender_id', user.id); // Only count messages sent by the OTHER person
+        // 2. Fetch unread counts — only for THIS user's conversations
+        const convoIds = convoData.map(c => c.id);
+        if (convoIds.length > 0) {
+          const { data: unreadData } = await supabase
+            .from('messages')
+            .select('conversation_id')
+            .in('conversation_id', convoIds)
+            .eq('is_read', false)
+            .neq('sender_id', user.id);
 
-      if (unreadData) {
-        const counts = {};
-        unreadData.forEach(msg => {
-          counts[msg.conversation_id] = (counts[msg.conversation_id] || 0) + 1;
-        });
-        setUnreadCounts(counts);
+          if (unreadData) {
+            const counts = {};
+            unreadData.forEach(msg => {
+              counts[msg.conversation_id] = (counts[msg.conversation_id] || 0) + 1;
+            });
+            setUnreadCounts(counts);
+          }
+        }
       }
     };
 
@@ -76,7 +89,7 @@ const ChatSidebar = ({ onSelectConvo, activeConvoId }) => {
         })
         .subscribe();
 
-      // NEW: Listen for new messages to increment the unread badge
+      // Listen for new messages to increment the unread badge
       const msgChannel = supabase
         .channel('sidebar_unread')
         .on('postgres_changes', {
@@ -84,8 +97,8 @@ const ChatSidebar = ({ onSelectConvo, activeConvoId }) => {
           schema: 'public',
           table: 'messages'
         }, (payload) => {
-          // If the message is NOT from us, and we are NOT currently in that chat
-          if (payload.new.sender_id !== user.id && payload.new.conversation_id !== activeConvoId) {
+          // Use ref so we always check the LATEST activeConvoId
+          if (payload.new.sender_id !== user.id && payload.new.conversation_id !== activeConvoIdRef.current) {
             setUnreadCounts(prev => ({
               ...prev,
               [payload.new.conversation_id]: (prev[payload.new.conversation_id] || 0) + 1
@@ -99,7 +112,7 @@ const ChatSidebar = ({ onSelectConvo, activeConvoId }) => {
         supabase.removeChannel(msgChannel);
       };
     }
-  }, [user, activeConvoId]);
+  }, [user]); // Removed activeConvoId — using ref instead
 
   // Handle Search Query Effect
   useEffect(() => {

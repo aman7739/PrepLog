@@ -13,7 +13,7 @@ export const useTasks = () => {
     try {
       const { data, error } = await supabase
         .from('tasks')
-        .select('*')
+        .select('id, text, category, done, date, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 

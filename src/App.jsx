@@ -1,27 +1,36 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import { supabase } from './lib/supabase'
 
-import AdminDashboard from './pages/AdminDashboard'
+// Static imports — first pages users see (instant load)
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import UpdatePassword from './pages/UpdatePassword' 
-import Dashboard from './pages/Dashboard'
-import SelectRoadmap from './pages/SelectRoadmap'
-import Platforms from './pages/Platforms'
-import Tasks from './pages/Tasks'
-import Notes from './pages/Notes'
-import RoadmapDetail from './pages/RoadmapDetail'
-import RoadmapBuilder from './pages/RoadmapBuilder'
-import BrowseRoadmaps from './pages/BrowseRoadmaps'
-import Profile from './pages/Profile'
-import Leaderboard from './pages/Leaderboard'
-import ActivityFeed from './pages/ActivityFeed'
-// Day 11 Import
-import ChatMessenger from './pages/ChatMessenger' 
 import Layout from './components/Layout'
+
+// Lazy imports — only loaded when user navigates there (saves DB connections)
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
+const UpdatePassword = lazy(() => import('./pages/UpdatePassword'))
+const SelectRoadmap = lazy(() => import('./pages/SelectRoadmap'))
+const Platforms = lazy(() => import('./pages/Platforms'))
+const Tasks = lazy(() => import('./pages/Tasks'))
+const Notes = lazy(() => import('./pages/Notes'))
+const RoadmapDetail = lazy(() => import('./pages/RoadmapDetail'))
+const RoadmapBuilder = lazy(() => import('./pages/RoadmapBuilder'))
+const BrowseRoadmaps = lazy(() => import('./pages/BrowseRoadmaps'))
+const Profile = lazy(() => import('./pages/Profile'))
+const Leaderboard = lazy(() => import('./pages/Leaderboard'))
+const ActivityFeed = lazy(() => import('./pages/ActivityFeed'))
+const ChatMessenger = lazy(() => import('./pages/ChatMessenger'))
+
+// Loading fallback for lazy routes
+const PageLoader = () => (
+  <div className="min-h-screen bg-brand-black flex items-center justify-center">
+    <div className="text-theme-textSec text-sm">Loading...</div>
+  </div>
+)
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth()
@@ -88,6 +97,7 @@ function App() {
           }
         }}
       />
+      <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -111,6 +121,7 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         </Route>
       </Routes>
+      </Suspense>
     </>
   )
 }

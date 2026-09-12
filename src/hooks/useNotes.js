@@ -13,7 +13,7 @@ export const useNotes = () => {
     try {
       const { data, error } = await supabase
         .from('notes')
-        .select('*')
+        .select('id, content, date, created_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 

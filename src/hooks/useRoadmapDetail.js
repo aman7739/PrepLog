@@ -18,10 +18,10 @@ export const useRoadmapDetail = (templateId) => {
   const fetchRoadmapDetail = async () => {
     setLoading(true)
     try {
-      // Fetch template
+      // Fetch template — only columns we display
       const { data: templateData, error: templateError } = await supabase
         .from('roadmap_templates')
-        .select('*')
+        .select('id, title, description, category, difficulty, icon, duration_weeks, created_by, is_public')
         .eq('id', templateId)
         .single()
 
@@ -31,27 +31,34 @@ export const useRoadmapDetail = (templateId) => {
       // Fetch phases
       const { data: phasesData, error: phasesError } = await supabase
         .from('template_phases')
-        .select('*')
+        .select('id, phase_number, name, description, duration_weeks, order_num')
         .eq('template_id', templateId)
         .order('order_num', { ascending: true })
 
       if (phasesError) throw phasesError
       setPhases(phasesData || [])
 
-      // Fetch all topics for all phases
-      const topicsByPhase = {}
-      const allTopicIds = []
+      // Fetch ALL topics for ALL phases in ONE query (instead of N separate queries)
+      const phaseIds = (phasesData || []).map(p => p.id)
+      let allTopicsData = []
 
-      for (const phase of phasesData || []) {
+      if (phaseIds.length > 0) {
         const { data: topicsData, error: topicsError } = await supabase
           .from('template_topics')
-          .select('*')
-          .eq('phase_id', phase.id)
+          .select('id, phase_id, topic, resource_url, youtube_url, cert_url, order_num')
+          .in('phase_id', phaseIds)
           .order('order_num', { ascending: true })
 
         if (topicsError) throw topicsError
-        topicsByPhase[phase.id] = topicsData || []
-        allTopicIds.push(...(topicsData?.map(t => t.id) || []))
+        allTopicsData = topicsData || []
+      }
+
+      // Group topics by phase in JavaScript (free, no DB cost)
+      const topicsByPhase = {}
+      const allTopicIds = []
+      for (const phase of (phasesData || [])) {
+        topicsByPhase[phase.id] = allTopicsData.filter(t => t.phase_id === phase.id)
+        allTopicIds.push(...topicsByPhase[phase.id].map(t => t.id))
       }
       setPhaseTopics(topicsByPhase)
 

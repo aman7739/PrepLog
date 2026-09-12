@@ -93,13 +93,13 @@ function Profile() {
     try {
       const { count: topicsCount } = await supabase
         .from('roadmap_progress')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('done', true)
 
       const { count: tasksCount } = await supabase
         .from('tasks')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('done', true)
 

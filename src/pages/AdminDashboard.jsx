@@ -29,7 +29,7 @@ function AdminDashboard() {
     try {
       const { data: usersData, error: usersError } = await supabase
         .from('profiles')
-        .select('*')
+        .select('id, full_name, username, role, topics_completed, created_at')
         .order('created_at', { ascending: false });
       if (usersError) throw usersError;
 

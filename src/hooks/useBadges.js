@@ -17,7 +17,7 @@ export function useBadges() {
     try {
       const { data } = await supabase
         .from('user_badges')
-        .select('*')
+        .select('badge_type, earned_at')
         .eq('user_id', user.id)
         .order('earned_at', { ascending: false })
 
@@ -34,18 +34,18 @@ export function useBadges() {
       // Get user stats
       const { count: topicsCount } = await supabase
         .from('roadmap_progress')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id)
         .eq('done', true)
 
       const { count: roadmapsCount } = await supabase
         .from('user_roadmaps')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', user.id)
 
       const { count: forksCount } = await supabase
         .from('roadmap_templates')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('created_by', user.id)
 
       const { data: profile } = await supabase
